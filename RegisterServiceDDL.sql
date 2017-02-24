@@ -35,3 +35,30 @@ INSERT INTO product VALUES (
      , 150
      , current_timestamp
 );
+
+
+/**************** EMPLOYEEE TABLE ******************/
+
+CREATE EXTENSION "uiid-ossp";
+
+CREATE TYPE role AS ENUM ('general manager', 'shift manager', 'cashier');
+
+CREATE TABLE employee (
+  id uuid NOT NULL,
+  firstName character varying(32) NOT NULL DEFAULT(''),
+  lastName character varying(32) NOT NULL DEFAULT(''),
+  employeeID character varying(32) NOT NULL DEFAULT(''),
+  active boolean NOT NULL DEFAULT(FALSE),
+  currentRole role NOT NULL DEFAULT('cashier'),
+  managerID uuid NOT NULL,
+  password character varying(15) NOT NULL DEFAULT(''),
+  createdon timestamp without time zone NOT NULL DEFAULT now(),
+  CONSTRAINT R_ID PRIMARY KEY (id)
+) WITH (
+  OIDS=FALSE
+);
+
+CREATE INDEX emplyee_employeeID
+ON employee
+USING btree(employeeID);
+
