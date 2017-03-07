@@ -62,3 +62,15 @@ CREATE INDEX emplyee_employeeID
 ON employee
 USING btree(employeeID);
 
+INSERT INTO employee VALUES (
+	uuid_generate_v4()
+   , 'Quinn'
+   , 'Childress'
+   , 'employee001'
+   , TRUE
+   , 'cashier'
+   , uuid_generate_v4()
+   , 'testing'
+   , current_timestamp
+
+);
