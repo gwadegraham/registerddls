@@ -39,38 +39,21 @@ INSERT INTO product VALUES (
 
 /**************** EMPLOYEEE TABLE ******************/
 
-CREATE EXTENSION "uiid-ossp";
-
-CREATE TYPE role AS ENUM ('general manager', 'shift manager', 'cashier');
-
 CREATE TABLE employee (
   id uuid NOT NULL,
-  firstName character varying(32) NOT NULL DEFAULT(''),
-  lastName character varying(32) NOT NULL DEFAULT(''),
-  employeeID character varying(32) NOT NULL DEFAULT(''),
-  active boolean NOT NULL DEFAULT(FALSE),
-  currentRole role NOT NULL DEFAULT('cashier'),
-  managerID uuid NOT NULL,
-  password character varying(15) NOT NULL DEFAULT(''),
+  employeeid character varying(32) NOT NULL DEFAULT(''),
+  firstname character varying(128) NOT NULL DEFAULT(''),
+  lastname character varying(128) NOT NULL DEFAULT(''),
+  password character varying(512) NOT NULL DEFAULT(''),
+  active boolean NOT NULL DEFAULT(FALSE), 
+  classification int NOT NULL DEFAULT(0),
+  managerid uuid NOT NULL,
   createdon timestamp without time zone NOT NULL DEFAULT now(),
-  CONSTRAINT R_ID PRIMARY KEY (id)
+  CONSTRAINT employee_pkey PRIMARY KEY (id)
 ) WITH (
   OIDS=FALSE
 );
 
-CREATE INDEX emplyee_employeeID
-ON employee
-USING btree(employeeID);
-
-INSERT INTO employee VALUES (
-	uuid_generate_v4()
-   , 'Quinn'
-   , 'Childress'
-   , 'employee001'
-   , TRUE
-   , 'cashier'
-   , uuid_generate_v4()
-   , 'testing'
-   , current_timestamp
-
-);
+CREATE INDEX ix_employee_employeeid
+  ON employee
+  USING hash(employeeid);
