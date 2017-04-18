@@ -36,6 +36,26 @@ INSERT INTO product VALUES (
      , current_timestamp
 );
 
+INSERT INTO product VALUES (
+       uuid_generate_v4()
+     , 'lookupcode4'
+     , 1231
+     , current_timestamp
+);
+
+INSERT INTO product VALUES (
+       uuid_generate_v4()
+     , 'lookupcode5'
+     , 39
+     , current_timestamp
+);
+
+INSERT INTO product VALUES (
+       uuid_generate_v4()
+     , 'lookupcode6'
+     , 42
+     , current_timestamp
+);
 
 /**************** EMPLOYEEE TABLE ******************/
 
@@ -57,3 +77,49 @@ CREATE TABLE employee (
 CREATE INDEX ix_employee_employeeid
   ON employee
   USING hash(employeeid);
+
+/** Transaction Table **/
+
+CREATE TABLE transaction (
+	id UUID NOT NULL,
+	recordId varchar(32) NOT NULL DEFAULT(''),
+	cashierId varchar(32) NOT NULL DEFAULT(''),
+	totalAmount DECIMAL(10, 2) NOT NULL,
+	type character(1) NOT NULL DEFAULT('s'),
+	referenceId varchar(32) NOT NULL DEFAULt(''),
+	createdOn timestamp without time zone NOT NULL DEFAULT NOW(),
+	CONSTRAINT transaction_pkey PRIMARY KEY (id)
+) WITH (
+	OIDS = FALSE
+);
+
+CREATE INDEX ix_transaction_recordid
+  ON transaction
+  USING btree(recordId);
+
+/** Transaction Entry table **/
+
+CREATE TABLE transactionEntry (
+	id UUID NOT NULL,
+	transactionId VARCHAR(32) NOT NULL DEFAULT(''),
+	productId VARCHAR(32) NOT NULL DEFAULT(''),
+	amountSold INT NOT NULL DEFAULT(0),
+	soldPrice DECIMAL(10, 2) NOT NULL DEFAULT(0),
+	CONSTRAINT transactionEntry_pkey PRIMARY KEY (id)
+) WITH (
+	OIDS = FALSE
+);
+
+CREATE INDEX ix_transactionEntry_recordid
+  ON transactionEntry
+  USING btree(transactionId, amountSold);
+	
+
+ALTER TABLE product
+ADD COLUMN price DECIMAL(10, 2) NOT NULL DEFAULT(0);
+
+ALTER TABLE product
+ADD COLUMN active BOOLEAN NOT NULL DEFAULT(FALSE);
+
+ALTER TABLE product
+RENAME COLUMN count TO quantity;
